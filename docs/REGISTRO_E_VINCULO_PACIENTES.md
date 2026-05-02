@@ -15,7 +15,7 @@ A plataforma opera sob três perfis principais:
 ## 2. Diretrizes de Registro
 
 - **Empresas e Profissionais:** O acesso inicial de uma empresa e de seus profissionais não é realizado por autoatendimento público; ele deve ser provisionado pelo Administrador do Sistema.
-- **Pacientes:** O registro público é exclusivo para o perfil de paciente.
+- **Pacientes:** É possível o **cadastro público** de pacientes (`POST /auth/registro`; convite opcional na criação) e existe também fluxo opcional de **pré-cadastro pelo profissional** seguido de **primeiro acesso** pelo paciente (`/public/pacientes/primeiro-acesso/*`). Detalhes do segundo em `FLUXO_ONBOARDING_PACIENTE_SINERGIA.md`.
 - **Identificação:** No momento do cadastro, o sistema gera automaticamente um **Código Público de Identificação** para o paciente. Este identificador é fixo e não pode ser alterado pelo usuário.
 
 ## 3. Modelo de Vínculo (Tutela)
