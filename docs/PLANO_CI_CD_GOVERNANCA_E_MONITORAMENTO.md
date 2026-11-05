@@ -171,7 +171,7 @@ O GitHub Environments permite segregação estrita de variáveis e permissões e
 | Configuração | Ambiente `homologation` | Ambiente `production` |
 | :--- | :--- | :--- |
 | **Frontend (PWA / Web)** | https://app-hml.sinergiahealth.com.br | https://app.sinergiahealth.com.br |
-| **Backend (API)** | https://api-homolog.sinergia.yegear.dev | https://api-sinergia.yegear.dev |
+| **Backend (API)** | https://api-hml-sinergia.yegear.dev | https://api-sinergia.yegear.dev |
 | **Gatilho de Ativação** | Push / Merge na branch `develop` | Criação de Tag Git `v*.*.*` |
 | **Aprovação Manual** | Desativada (Deploy 100% Contínuo) | **Obrigatória (Required Reviewers)** |
 | **Papéis Autorizados** | Qualquer membro com permissão de escrita | Apenas Tech Lead / Product Owner (usuários explicitamente selecionados) |
@@ -203,7 +203,7 @@ flowchart TD
     end
 
     DOM_PROD["api-sinergia.yegear.dev"] --> NGINX
-    DOM_HOMOLOG["api-homolog.sinergia.yegear.dev"] --> NGINX
+    DOM_HOMOLOG["api-hml-sinergia.yegear.dev"] --> NGINX
     NGINX -->|proxy_pass :8080| API_P
     NGINX -->|proxy_pass :8081| API_H
     
@@ -304,7 +304,7 @@ flowchart LR
  └── Adição da verificação de vulnerabilidades (Dependency Review Action e Trivy).
 
 [ Fase 3: Isolamento de Ambientes no Servidor ]
- ├── Configuração do subdomínio (api-homolog.sinergia.yegear.dev) no DNS.
+ ├── Configuração do subdomínio (api-hml-sinergia.yegear.dev) no DNS.
  ├── Configuração dos arquivos /opt/sinergia-api-homolog/docker-compose.yml e .env.homolog.
  ├── Criação dos volumes e containers separados do MariaDB.
  └── Terminação SSL gerenciada no Cloudflare (Edge HTTPS) e recarga do container Nginx via Docker.
