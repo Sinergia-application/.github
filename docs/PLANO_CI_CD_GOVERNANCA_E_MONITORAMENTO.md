@@ -309,7 +309,8 @@ flowchart LR
 
 [ Fase 4: Automação do Deploy (CD) & Monitoramento ]
  ├── Instalação e registro do GitHub Actions Runner no servidor dedicado.
- ├── Criação dos workflows .github/workflows/deploy-homolog.yml e deploy-prod.yml.
+ ├── Criação dos workflows .github/workflows/deploy-homolog.yml e deploy-prod.yml na API.
+ ├── Configuração do Cloudflare Pages/Workers Git Integration para deploy contínuo do Frontend (homolog na branch develop e prod na branch master).
  ├── Subida do Docker Compose de observabilidade (Grafana + Prometheus + Loki).
  └── Configuração dos dashboards e alertas gratuitos via webhook Telegram/Discord.
 ```
