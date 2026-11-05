@@ -170,6 +170,8 @@ O GitHub Environments permite segregação estrita de variáveis e permissões e
 
 | Configuração | Ambiente `homologation` | Ambiente `production` |
 | :--- | :--- | :--- |
+| **Frontend (PWA / Web)** | https://app-hml.sinergiahealth.com.br | https://app.sinergiahealth.com.br |
+| **Backend (API)** | https://api-homolog.sinergia.yegear.dev | https://api-sinergia.yegear.dev |
 | **Gatilho de Ativação** | Push / Merge na branch `develop` | Criação de Tag Git `v*.*.*` |
 | **Aprovação Manual** | Desativada (Deploy 100% Contínuo) | **Obrigatória (Required Reviewers)** |
 | **Papéis Autorizados** | Qualquer membro com permissão de escrita | Apenas Tech Lead / Product Owner (usuários explicitamente selecionados) |
