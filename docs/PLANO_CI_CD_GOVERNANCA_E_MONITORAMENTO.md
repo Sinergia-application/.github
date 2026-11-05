@@ -185,18 +185,18 @@ Como o monitoramento em tempo real roda 100% no cliente (`sinergia-web`), a infr
 ```mermaid
 flowchart TD
     subgraph HostServer["Servidor Dedicado (Linux)"]
-        NGINX["Nginx Host (Portas 80 / 443 + SSL Certbot)"]
+        NGINX["Nginx Container (Portas 80 / 443 + SSL Cloudflare Edge)"]
         
-        subgraph ProdStack["Ambiente Produção (/opt/sinergia/prod)"]
+        subgraph ProdStack["Ambiente Produção (/opt/sinergia-api)"]
             API_P["sinergia-api-prod (:8080)"]
             DB_P[("sinergia-mariadb-prod\nVolume: mariadb_data_prod\nDB: sinergia")]
-            STORAGE_P["Storage PROD: /opt/sinergia-storage/prod"]
+            STORAGE_P["Storage PROD: /opt/sinergia-storage"]
         end
 
-        subgraph HomologStack["Ambiente Homologação (/opt/sinergia/homolog)"]
+        subgraph HomologStack["Ambiente Homologação (/opt/sinergia-api-homolog)"]
             API_H["sinergia-api-homolog (:8081)"]
             DB_H[("sinergia-mariadb-homolog\nVolume: mariadb_data_homolog\nDB: sinergia_homolog")]
-            STORAGE_H["Storage HOMOLOG: /opt/sinergia-storage/homolog"]
+            STORAGE_H["Storage HOMOLOG: /opt/sinergia-storage-homolog"]
         end
     end
 
@@ -216,7 +216,7 @@ flowchart TD
    - **Produção**: `sinergia-mariadb-prod` com volume persistente `mariadb_data_prod`. Dados reais de pacientes.
    - **Homologação**: `sinergia-mariadb-homolog` com volume `mariadb_data_homolog`. Dados sintéticos de testes. O Flyway executa migrações experimentais sem nenhum risco de quebra em produção.
 2. **Storage de Vídeos e Mídias**:
-   - `/opt/sinergia-storage/prod` vs `/opt/sinergia-storage/homolog`.
+   - `/opt/sinergia-storage` vs `/opt/sinergia-storage-homolog`.
    - Limpeza periódica em homologação via cron job para evitar ocupação desnecessária de disco.
 3. **Segurança de Credenciais**:
    - Extinção total de senhas e chaves de API em texto puro nos arquivos de compose.
@@ -239,7 +239,7 @@ Fluxo de execução de cada deploy da API:
 git pull origin <branch_ou_tag>
 
 # 2. Build e reload dos containers sem derrubar o banco
-docker compose -f /opt/sinergia/<ambiente>/docker-compose.yml up -d --no-deps --build api
+docker compose -f docker-compose.<ambiente>.yml up -d --no-deps --build api
 
 # 3. Healthcheck automatizado de confirmação
 for i in {1..12}; do
@@ -252,7 +252,7 @@ done
 
 # 4. Rollback imediato se não responder UP em 60s
 echo "Healthcheck falhou. Iniciando rollback para imagem anterior..."
-docker compose -f /opt/sinergia/<ambiente>/docker-compose.yml rollback
+docker compose -f docker-compose.<ambiente>.yml rollback
 exit 1
 ```
 
@@ -303,9 +303,9 @@ flowchart LR
 
 [ Fase 3: Isolamento de Ambientes no Servidor ]
  ├── Configuração do subdomínio (api-homolog.sinergia.yegear.dev) no DNS.
- ├── Configuração dos arquivos /opt/sinergia/homolog/docker-compose.yml e .env.homolog.
+ ├── Configuração dos arquivos /opt/sinergia-api-homolog/docker-compose.yml e .env.homolog.
  ├── Criação dos volumes e containers separados do MariaDB.
- └── Emissão de certificados SSL gratuitos via Let's Encrypt / Certbot no Nginx.
+ └── Terminação SSL gerenciada no Cloudflare (Edge HTTPS) e recarga do container Nginx via Docker.
 
 [ Fase 4: Automação do Deploy (CD) & Monitoramento ]
  ├── Instalação e registro do GitHub Actions Runner no servidor dedicado.
