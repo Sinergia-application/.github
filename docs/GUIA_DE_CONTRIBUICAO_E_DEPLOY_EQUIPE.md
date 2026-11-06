@@ -28,11 +28,11 @@ flowchart TD
     end
     
     HML_WEB --> QA["Validação Técnica & Homologação Clínica"]
-    QA -->|Aprovado para Release| PR_MASTER["Pull Request: develop ➔ master"]
+    QA -->|Aprovado para Release + CHANGELOG.md atualizado| PR_MASTER["Pull Request: develop ➔ master"]
     
     subgraph Prod["Ambiente de Produção (Aprovação Estrita)"]
         PR_MASTER --> MERGE_MASTER["Merge em master"]
-        MERGE_MASTER --> TAG["Criação de Tag Git anotada\n(ex: v1.1.0) + CHANGELOG.md"]
+        MERGE_MASTER --> TAG["Criação de Tag Git anotada\n(ex: v1.1.0)"]
         TAG --> GATEKEEPER{"Gatekeeper de Role:\nUsuário == WallasAR ?"}
         GATEKEEPER -- Não --> BLOCK["❌ Deploy Cancelado"]
         GATEKEEPER -- Sim --> DEPLOY_PROD["Deploy em Produção (CD)"]
@@ -139,31 +139,40 @@ Assim que o merge na branch `develop` é concluído:
 
 #### Fluxo de Promoção:
 
-#### Passo 5.1: PR de `develop` para `master`
-Quando as funcionalidades homologadas estiverem prontas para ir ao ar:
-1. Abra um Pull Request de **`develop`** para **`master`**.
-2. Faça a revisão final de diffs.
-3. Conclua o Merge na `master`.
-
-#### Passo 5.2: Atualizar o arquivo `CHANGELOG.md`
-Na branch `master`, edite o `CHANGELOG.md` adicionando a nova versão (ex: `## [1.1.0] - 2026-11-XX`), listando:
+#### Passo 5.1: Atualizar o arquivo `CHANGELOG.md` na `develop` (Antes do PR para `master`)
+Antes de abrir o Pull Request para a `master`, certifique-se de que o arquivo `CHANGELOG.md` já contém o registro da nova versão (ex: `## [1.1.0] - 2026-11-XX`), listando:
 * 🚀 **Adicionado (Features)**
 * 🔧 **Alterado & Corrigido (Fixes / Refactors)**
 * 📦 **Pull Requests Integrados**
 
-Faça commit dessa alteração:
+> [!IMPORTANT]
+> Atualize o `CHANGELOG.md` ainda na branch da última feature/release ou via PR para a `develop`. Isso evita commits avulsos diretamente na `master` e garante que o `CHANGELOG.md` já esteja presente quando a tag `vX.Y.Z` disparar a criação automática da **GitHub Release**.
+
+```bash
+# Caso precise preparar o changelog em uma branch de release antes de promover:
+git checkout develop
+git pull origin develop
+git checkout -b docs/changelog-v1.1.0
+# Edite o CHANGELOG.md e salve
+git add CHANGELOG.md
+git commit -m "docs(changelog): prepara release v1.1.0"
+git push -u origin docs/changelog-v1.1.0
+# Abra e aprove o PR para a develop
+```
+
+#### Passo 5.2: PR de `develop` para `master`
+Com todas as funcionalidades homologadas e o `CHANGELOG.md` atualizado na `develop`:
+1. Abra um Pull Request de **`develop`** para **`master`**.
+2. Faça a revisão final de diffs (código + `CHANGELOG.md`).
+3. Conclua o Merge na `master`.
+
+#### Passo 5.3: Criar e Publicar a Tag Semântica
+Sincronize sua branch `master` local, crie a tag semântica anotada e envie para o GitHub:
+
 ```bash
 git checkout master
 git pull origin master
-git add CHANGELOG.md
-git commit -m "docs(changelog): prepara release v1.1.0"
-git push origin master
-```
 
-#### Passo 5.3: Criar e Publicar a Tag Semântica
-Crie a tag semântica anotada e envie para o GitHub:
-
-```bash
 # Exemplo para release v1.1.0:
 git tag -a v1.1.0 -m "Release v1.1.0 - Suporte ao Berg 08 e Ajustes de Telemetria"
 git push origin v1.1.0
