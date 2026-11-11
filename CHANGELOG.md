@@ -1,26 +1,35 @@
-# Histórico de Evolução Documental e Governança (`.github`)
+# Changelog — Sinergia Documentação e Governança (`.github`)
 
-Este arquivo registra as principais atualizações estruturais realizadas no repositório central de documentação e governança da organização Sinergia Fisioterapia.
+Todas as alterações notáveis na documentação arquitetural, fluxos do sistema, especificações clínicas e diretrizes de engenharia são documentadas neste arquivo.
+O formato é baseado no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e este repositório segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ---
 
-## [2026-11-11] — Reorganização Completa do Hub Central e Documentação de Fluxos
+## [1.0.0] - 2026-11-11
 
 ### Adicionado
-- Criação do portal navegável na raiz (`README.md`) e do índice detalhado em `docs/README.md`.
-- Criação da documentação completa dos seis grandes fluxos operacionais constatados no código de `sinergia-api` e `sinergia-web` em `docs/02-fluxos-do-sistema/`:
-  - `autenticacao-perfis-e-onboarding.md`
-  - `gestao-clinicas-equipe-e-auditoria.md`
-  - `catalogo-exercicios-instancias-e-tts.md`
-  - `roteiros-sessao-e-processamento-analise.md`
-  - `agenda-clinica-e-mensageria.md`
-  - `aderencia-retencao-notificacoes-e-relatorios.md`
-- Inclusão e categorização das especificações clínicas e biomecânicas em `docs/03-clinico-e-biomecanica/`:
-  - `plano-implementacao-reunioes-clinicas.md` (consolidação técnica das reuniões de setembro e outubro de 2026 em 4 sprints).
-  - `analise-escala-de-berg.md`, `especificacao-berg-03-sentado.md` e PDF de referência da Escala de Berg.
-- Promoção da documentação de privacidade e proteção de dados para `docs/04-seguranca-e-lgpd/lgpd-consentimento-e-menores.md`.
+- **Portal Institucional e Vitrine da Organização (`README.md` e `profile/README.md`)**:
+  - Apresentação visual da plataforma Sinergia com identidade gráfica oficial, demonstração da interface de captura biomecânica em tempo real, mapeamento anatômico e atalhos diretos para ambientes e documentações.
+  - Preservação do índice técnico completo em `docs/README.md` e `docs/INDICE_GERAL.md`, e do documento de logística inicial em `docs/05-institucional-e-historico/planejamento-logistica-inicial.md`.
+- **Automação de Releases de Documentação (`.github/workflows/release-docs.yml`)**:
+  - Workflow acionado por tags SemVer (`v*.*.*`) que extrai automaticamente as notas da versão a partir do `CHANGELOG.md` e publica a GitHub Release oficial, alinhado ao padrão de `sinergia-api` e `sinergia-web`.
+- **Documentação Ponta a Ponta dos Fluxos do Sistema (`docs/02-fluxos-do-sistema/`)**:
+  - `autenticacao-perfis-e-onboarding.md`: controle de acesso RBAC (`ADMIN_SISTEMA`, `PROFISSIONAL_SAUDE`, `RECEPCIONISTA`, `PACIENTE`), pré-cadastro, ativação com código por e-mail (SHA-256), convites e vínculo por código público.
+  - `gestao-clinicas-equipe-e-auditoria.md`: modelo multi-tenant de empresas/clínicas, gestor da clínica, recepcionistas, parametrizações de alertas e trilha de auditoria (`AuditLog`).
+  - `catalogo-exercicios-instancias-e-tts.md`: seeds do catálogo, validadores de regras JSON por modalidade, visibilidade por clínica, geração de áudios via ElevenLabs TTS e instâncias personalizadas (`ExercicioInstancia`).
+  - `roteiros-sessao-e-processamento-analise.md`: prescrição de roteiros por dias da semana, avaliação de qualidade de captura, execução realtime e offline no navegador, pós-processamento com Google Gemini, cache materializado e reprocessamento determinístico de landmarks.
+  - `agenda-clinica-e-mensageria.md`: agenda compartilhada presencial e online e chat interno com cartões de referência para sessões, análises e exercícios.
+  - `aderencia-retencao-notificacoes-e-relatorios.md`: cálculo de adesão de 14 dias, alertas clínicos automáticos, tarefas agendadas idempotentes, Web Push VAPID, cockpit de retenção e exportação PDF/CSV.
+- **Especificações Clínicas e Biomecânica (`docs/03-clinico-e-biomecanica/`)**:
+  - `plano-implementacao-reunioes-clinicas.md`: plano técnico detalhado das Sprints 1 a 4 derivado das reuniões clínicas de setembro e outubro de 2026.
+  - `analise-escala-de-berg.md`, `especificacao-berg-03-sentado.md` e referência oficial em PDF da Escala de Equilíbrio de Berg.
+- **Segurança da Informação e LGPD (`docs/04-seguranca-e-lgpd/`)**:
+  - `lgpd-consentimento-e-menores.md`: arquitetura de consentimentos obrigatórios e opcionais, telemetria de câmera, expurgo automático de vídeos em 15 dias e diretrizes jurídicas.
 
 ### Alterado
-- Reestruturação do diretório `docs/` em cinco pastas numeradas por domínio (`01-arquitetura-e-infra`, `02-fluxos-do-sistema`, `03-clinico-e-biomecanica`, `04-seguranca-e-lgpd` e `05-institucional-e-historico`), preservando `docs/GUIA_DE_CONTRIBUICAO_E_DEPLOY_EQUIPE.md` na raiz de `docs/` para manter compatibilidade com links existentes.
-- Atualização de `docs/01-arquitetura-e-infra/visao-geral-e-arquitetura.md` para refletir a arquitetura vigente (processamento de pose no navegador via MediaPipe, reprocessamento em Java via `LandmarksReplayer`, enriquecimento assíncrono via Google Gemini e cache materializado).
-- Padronização editorial em linguagem técnica natural e remoção de emojis nos documentos de governança e arquitetura.
+- **Reorganização Taxonômica de `docs/`**:
+  - Estruturação em cinco diretórios temáticos numerados (`01-arquitetura-e-infra`, `02-fluxos-do-sistema`, `03-clinico-e-biomecanica`, `04-seguranca-e-lgpd` e `05-institucional-e-historico`), mantendo `docs/GUIA_DE_CONTRIBUICAO_E_DEPLOY_EQUIPE.md` no caminho raiz para compatibilidade de links.
+- **Atualização Arquitetural (`docs/01-arquitetura-e-infra/visao-geral-e-arquitetura.md`)**:
+  - Documentação alinhada à arquitetura vigente com processamento de pose no cliente via MediaPipe e reprocessamento em Java (`LandmarksReplayer`).
+- **Padronização de Templates de Pull Request e Redação Técnica**:
+  - Simplificação do `.github/pull_request_template.md` com foco em Changelog, Contexto e Notas Técnicas, e adoção de redação técnica natural sem emojis.
