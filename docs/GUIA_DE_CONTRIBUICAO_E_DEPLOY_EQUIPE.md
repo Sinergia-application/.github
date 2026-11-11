@@ -1,56 +1,56 @@
-# 📘 Guia Oficial de Contribuição, GitFlow e Deploys — Sinergia Health
+# Guia Oficial de Contribuição, GitFlow e Deploys — Sinergia Health
 
-Este documento estabelece o procedimento operacional padrão (SOP) obrigatório para todos os desenvolvedores e colaboradores do ecossistema Sinergia (**`sinergia-api`** e **`sinergia-web`**).
+Este documento estabelece o procedimento operacional padrão obrigatório para todos os desenvolvedores e colaboradores do ecossistema Sinergia (**`sinergia-api`** e **`sinergia-web`**).
 
 ---
 
-## 🗺️ Visão Geral do Ciclo de Vida (GitFlow)
+## Visão Geral do Ciclo de Vida (GitFlow)
 
 ```mermaid
 flowchart TD
     DEV["Desenvolvedor"] -->|1. Cria branch a partir de develop| BRANCH["Branch de Trabalho\n(feat/*, fix/*, refactor/*)"]
     BRANCH -->|2. Commits Convencionais| COMMITS["Conventional Commits\n(feat:, fix:, chore:)"]
-    COMMITS -->|3. Abre Pull Request| PR["Pull Request ➔ develop"]
+    COMMITS -->|3. Abre Pull Request| PR["Pull Request -> develop"]
     
-    subgraph CI["Quality Gate Automático (GitHub Actions)"]
-        TESTS["Testes Unitários & Contratos"]
+    subgraph CI["Quality Gate Automatico (GitHub Actions)"]
+        TESTS["Testes Unitarios e Contratos"]
         SECURITY["Scanner de Vulnerabilidades Trivy"]
     end
     
     PR --> CI
     CI -->|Aprovado + Code Review| MERGE_DEV["Merge em develop"]
     
-    subgraph Homolog["Ambiente de Homologação (Automático)"]
-        MERGE_DEV --> DEPLOY_HML["Deploy Contínuo Homologação"]
+    subgraph Homolog["Ambiente de Homologacao (Automatico)"]
+        MERGE_DEV --> DEPLOY_HML["Deploy Continuo Homologacao"]
         DEPLOY_HML --> HML_WEB["Web: app-hml.sinergiahealth.com.br"]
         DEPLOY_HML --> HML_API["API: api-hml-sinergia.yegear.dev (:8081)"]
         DEPLOY_HML --> HML_DB[("Banco: sinergia_homolog")]
     end
     
-    HML_WEB --> QA["Validação Técnica & Homologação Clínica"]
-    QA -->|Aprovado para Release + CHANGELOG.md atualizado| PR_MASTER["Pull Request: develop ➔ master"]
+    HML_WEB --> QA["Validacao Tecnica e Homologacao Clinica"]
+    QA -->|Aprovado para Release + CHANGELOG.md atualizado| PR_MASTER["Pull Request: develop -> master"]
     
-    subgraph Prod["Ambiente de Produção (Aprovação Estrita)"]
+    subgraph Prod["Ambiente de Producao (Aprovacao Estrita)"]
         PR_MASTER --> MERGE_MASTER["Merge em master"]
-        MERGE_MASTER --> TAG["Criação de Tag Git anotada\n(ex: v1.1.0)"]
-        TAG --> GATEKEEPER{"Gatekeeper de Role:\nUsuário == WallasAR ?"}
-        GATEKEEPER -- Não --> BLOCK["❌ Deploy Cancelado"]
-        GATEKEEPER -- Sim --> DEPLOY_PROD["Deploy em Produção (CD)"]
+        MERGE_MASTER --> TAG["Criacao de Tag Git anotada\n(ex: v1.1.0)"]
+        TAG --> GATEKEEPER{"Gatekeeper de Role:\nUsuario == WallasAR ?"}
+        GATEKEEPER -- Nao --> BLOCK["Deploy Cancelado"]
+        GATEKEEPER -- Sim --> DEPLOY_PROD["Deploy em Producao (CD)"]
         DEPLOY_PROD --> PROD_WEB["Web: app.sinergiahealth.com.br"]
         DEPLOY_PROD --> PROD_API["API: api-sinergia.yegear.dev (:8080)"]
         DEPLOY_PROD --> PROD_DB[("Banco: sinergia (Original)")]
-        DEPLOY_PROD --> RELEASE_SYNC["Sincronização Automática da Release no GitHub"]
+        DEPLOY_PROD --> RELEASE_SYNC["Sincronizacao Automatica da Release no GitHub"]
     end
 ```
 
 ---
 
-## 🌐 Tabela de Ambientes e Isolamento
+## Tabela de Ambientes e Isolamento
 
 > [!IMPORTANT]
-> Os ambientes são **estritamente isolados**. Testes, inserções ou wipes em homologação **jamais** impactam os dados reais de produção.
+> Os ambientes são **estritamente isolados**. Testes, inserções ou limpezas em homologação jamais impactam os dados reais de produção.
 
-| Parâmetro | 🧪 Homologação (Staging) | 🚀 Produção (Live) |
+| Parâmetro | Homologação (Staging) | Produção (Live) |
 | :--- | :--- | :--- |
 | **Frontend Web** | [`https://app-hml.sinergiahealth.com.br`](https://app-hml.sinergiahealth.com.br) | [`https://app.sinergiahealth.com.br`](https://app.sinergiahealth.com.br) |
 | **Backend API** | [`https://api-hml-sinergia.yegear.dev`](https://api-hml-sinergia.yegear.dev) | [`https://api-sinergia.yegear.dev`](https://api-sinergia.yegear.dev) |
@@ -63,18 +63,18 @@ flowchart TD
 
 ---
 
-## 🛠️ Passo a Passo para o Desenvolvedor
+## Passo a Passo para o Desenvolvedor
 
 ### 1. Criando sua Branch de Trabalho
 
-Todas as novas funcionalidades e correções **devem nascer a partir da branch `develop` atualizada**:
+Todas as novas funcionalidades e correções devem nascer a partir da branch `develop` atualizada:
 
 ```bash
-# 1. Certifique-se de estar na develop e com o código mais recente
+# 1. Certifique-se de estar na develop e com o codigo mais recente
 git checkout develop
 git pull origin develop
 
-# 2. Crie sua branch seguindo o padrão convencional
+# 2. Crie sua branch seguindo o padrao convencional
 git checkout -b <tipo>/<descricao-curta>
 ```
 
@@ -113,21 +113,22 @@ git push -u origin <sua-branch>
 
 1. Acesse o repositório no GitHub (`sinergia-api` ou `sinergia-web`).
 2. Abra um **Pull Request** apontando para a branch **`develop`** (nunca para a `master`).
-3. O GitHub Actions executará automaticamente o pipeline de CI:
+3. Preencha o template do Pull Request detalhando o **Changelog** das alterações, o **Contexto e Motivação** e eventuais **Notas Técnicas e Validação**.
+4. O GitHub Actions executará automaticamente o pipeline de CI:
    * **API**: Compilação Maven, testes JUnit/Surefire e varredura de vulnerabilidades Trivy.
    * **Web**: Testes unitários e contratos biomecânicos Karma Headless (`npm run test:headless`) e scanner Trivy.
-4. Após aprovação em Code Review e 100% dos testes verdes, realize o **Merge** no `develop`.
+5. Após aprovação em Code Review e 100% dos testes verdes, realize o **Merge** na `develop`.
 
 ---
 
 ### 4. Deploy Automático em Homologação
 
 Assim que o merge na branch `develop` é concluído:
-1. O workflow de CD ([`deploy-homolog.yml`](file:///d:/Projects/sinergia-web/.github/workflows/deploy-homolog.yml)) é disparado automaticamente.
+1. O workflow de CD (`deploy-homolog.yml`) é disparado automaticamente.
 2. A nova versão sobe imediatamente em:
    * **Frontend**: [`https://app-hml.sinergiahealth.com.br`](https://app-hml.sinergiahealth.com.br)
    * **Backend**: [`https://api-hml-sinergia.yegear.dev`](https://api-hml-sinergia.yegear.dev)
-3. O status do deploy fica registrado na aba **Deployments ➔ homologation** do GitHub.
+3. O status do deploy fica registrado na aba **Deployments -> homologation** do GitHub.
 4. A equipe e os profissionais clínicos realizam os testes de validação neste ambiente.
 
 ---
@@ -137,13 +138,11 @@ Assim que o merge na branch `develop` é concluído:
 > [!WARNING]
 > Ninguém sobe código diretamente para produção. Toda release passa compulsoriamente por Homologação, criação de Tag Semântica anotada, atualização de `CHANGELOG.md` e autorização do Tech Lead (`WallasAR`).
 
-#### Fluxo de Promoção:
-
 #### Passo 5.1: Atualizar o arquivo `CHANGELOG.md` na `develop` (Antes do PR para `master`)
 Antes de abrir o Pull Request para a `master`, certifique-se de que o arquivo `CHANGELOG.md` já contém o registro da nova versão (ex: `## [1.1.0] - 2026-11-XX`), listando:
-* 🚀 **Adicionado (Features)**
-* 🔧 **Alterado & Corrigido (Fixes / Refactors)**
-* 📦 **Pull Requests Integrados**
+* **Adicionado (Features)**
+* **Alterado e Corrigido (Fixes / Refactors)**
+* **Pull Requests Integrados**
 
 > [!IMPORTANT]
 > Atualize o `CHANGELOG.md` ainda na branch da última feature/release ou via PR para a `develop`. Isso evita commits avulsos diretamente na `master` e garante que o `CHANGELOG.md` já esteja presente quando a tag `vX.Y.Z` disparar a criação automática da **GitHub Release**.
@@ -179,18 +178,18 @@ git push origin v1.1.0
 ```
 
 #### Passo 5.4: Validação de Segurança e Deploy
-1. O push da tag dispara o workflow [`deploy-prod.yml`](file:///d:/Projects/sinergia-api/.github/workflows/deploy-prod.yml).
+1. O push da tag dispara o workflow `deploy-prod.yml`.
 2. O pipeline verifica a permissão: se o autor do disparo não for **`WallasAR`**, o deploy é **imediatamente abortado**.
 3. Sendo autorizado, o build de produção é gerado e publicado.
 4. O container da API ou o worker do Frontend é atualizado.
 5. O job `sync-release` lê automaticamente o bloco daquela versão no `CHANGELOG.md` e publica a **GitHub Release** oficial estruturada no GitHub com links para os PRs.
-6. Acompanhe o status verde na aba **Deployments ➔ production**.
+6. Acompanhe o status verde na aba **Deployments -> production**.
 
 ---
 
-## 🆘 Checklist Rápido de Troubleshooting
+## Checklist Rápido de Troubleshooting
 
 * **Erro de CORS no frontend**: Certifique-se de que a origem do app (`https://app-hml.sinergiahealth.com.br` ou `https://app.sinergiahealth.com.br`) está cadastrada no `CORS_ALLOWED_ORIGINS` do `docker-compose` correspondente.
 * **504 Gateway Timeout no login**: Indica preflight `OPTIONS` bloqueado por CORS ou API fora do ar.
 * **502 Bad Gateway no Cloudflare Tunnel**: Verifique se o container da API (`sinergia-api-prod` ou `sinergia-api-homolog`) está ativo (`docker ps`) e se o túnel aponta para o IP `192.168.0.203` na porta correta (`:80` ou `:8081`).
-* **Cache persistente no navegador**: Abra o DevTools (`F12`) ➔ **Application** ➔ **Storage** ➔ clique em **Clear site data** e recarregue com `Ctrl + F5`.
+* **Cache persistente no navegador**: Abra o DevTools (`F12`) -> **Application** -> **Storage** -> clique em **Clear site data** e recarregue com `Ctrl + F5`.
