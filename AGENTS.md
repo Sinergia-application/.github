@@ -56,8 +56,8 @@ Qualquer agente de IA (Antigravity, Cursor, GitHub Copilot, Claude Code, Windsur
 
 ## 5. Mapa da Documentação Central (`.github/docs/`)
 
-- [Índice Completo da Documentação](docs/README.md)
-- [Guia Oficial de Contribuição e Deploy da Equipe](https://github.com/sinergia-fisioterapia/.github/blob/main/docs/GUIA_DE_CONTRIBUICAO_E_DEPLOY_EQUIPE.md)
+- [Índice Completo da Documentação](https://github.com/Sinergia-application/sinergia-docs/blob/main/docs/README.md)
+- [Guia Oficial de Contribuição e Deploy da Equipe](https://github.com/Sinergia-application/sinergia-docs/blob/main/docs/GUIA_DE_CONTRIBUICAO_E_DEPLOY_EQUIPE.md)
 - `docs/01-arquitetura-e-infra/`: Visão geral do sistema, diagramas, pipelines CI/CD e arquitetura do motor de movimento.
 - `docs/02-fluxos-do-sistema/`: Documentação detalhada dos fluxos de autenticação/onboarding, gestão de clínicas/auditoria, catálogo/instâncias/TTS, roteiros/sessão/análise, agenda/mensageria e aderência/retenção/relatórios.
 - `docs/03-clinico-e-biomecanica/`: Plano de implementação por sprints das reuniões clínicas e especificações da Escala de Berg.

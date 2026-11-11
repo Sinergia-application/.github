@@ -11,4 +11,4 @@
 
 
 ---
-*Consulte o [Guia Oficial de Contribuicao e Deploy](https://github.com/sinergia-fisioterapia/.github/blob/main/docs/GUIA_DE_CONTRIBUICAO_E_DEPLOY_EQUIPE.md) para referencias sobre GitFlow, branches e ambientes.*
+*Consulte o [Guia Oficial de Contribuicao e Deploy](https://github.com/Sinergia-application/sinergia-docs/blob/main/docs/GUIA_DE_CONTRIBUICAO_E_DEPLOY_EQUIPE.md) para referencias sobre GitFlow, branches e ambientes.*
