@@ -20,7 +20,7 @@
 
 ## 2. Regras de Engenharia e GitFlow Obrigatórias
 
-Qualquer desenvolvedor ou agente de IA executando uma sprint deste documento **DEVE** seguir rigorosamente as diretrizes de [`AGENTS.md`](../AGENTS.md):
+Qualquer desenvolvedor ou agente de IA executando uma sprint deste documento **DEVE** seguir rigorosamente as diretrizes de [`AGENTS.md`](../../AGENTS.md):
 
 1. **Branching a partir da `develop` atualizada** (proibido commit/push direto em `develop` ou `master`):
    ```bash
