@@ -1,0 +1,12 @@
+# Artefatos gerados localmente por scripts de exportacao
+*.docx
+docs/05-institucional-e-historico/artigo-academico/artigo_projeto.pdf
+docs/05-institucional-e-historico/artigo-academico/artigo_projeto.md
+
+# Arquivos temporarios de sistema operacional e editores
+.DS_Store
+Thumbs.db
+*~
+*.tmp
+.vscode/
+.idea/
